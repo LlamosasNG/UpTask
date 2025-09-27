@@ -1,10 +1,10 @@
-import type { NextFunction, Request, Response } from "express";
-import Task, { ITask } from "../models/Task";
+import type { NextFunction, Request, Response } from 'express'
+import Task, { ITask } from '../models/Task'
 
 declare global {
   namespace Express {
     interface Request {
-      task: ITask;
+      task?: ITask
     }
   }
 }
@@ -14,17 +14,17 @@ export async function taskExists(
   next: NextFunction
 ) {
   try {
-    const { taskId } = req.params;
-    const task = await Task.findById(taskId);
+    const { taskId } = req.params
+    const task = await Task.findById(taskId)
     if (!task) {
-      const error = new Error("Tarea no encontrada");
-      res.status(404).json({ error: error.message });
-      return;
+      const error = new Error('Tarea no encontrada')
+      res.status(404).json({ error: error.message })
+      return
     }
-    req.task = task;
-    next();
+    req.task = task
+    next()
   } catch (error) {
-    res.status(500).json({ error: "Hubo un error" });
+    res.status(500).json({ error: 'Hubo un error' })
   }
 }
 
@@ -34,11 +34,11 @@ export async function taskBelongsToProject(
   next: NextFunction
 ) {
   if (req.task.project.toString() !== req.project.id) {
-    const error = new Error("Acción no válida");
-    res.status(400).json({ error: error.message });
-    return;
+    const error = new Error('Acción no válida')
+    res.status(400).json({ error: error.message })
+    return
   }
-  next();
+  next()
 }
 
 export async function hasAuthorization(
@@ -46,11 +46,10 @@ export async function hasAuthorization(
   res: Response,
   next: NextFunction
 ) {
-  if (req.user.id !== req.project.manager) {
-    const error = new Error("Acción no válida");
-    res.status(400).json({ error: error.message });
-    return;
+  if (req.user.id.toString() !== req.project.manager.toString()) {
+    const error = new Error('Acción no válida')
+    res.status(400).json({ error: error.message })
+    return
   }
-  next();
+  next()
 }
-

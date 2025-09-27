@@ -12,7 +12,7 @@ import {
 } from '../middleware/task'
 import { handleInputErrors } from '../middleware/validation'
 
-const router = Router()
+const router: Router = Router()
 
 /** Projects */
 router.use(authenticate)
@@ -60,6 +60,9 @@ router.delete(
 
 /** Tasks */
 router.param('projectId', projectExists)
+router.param('taskId', taskExists)
+router.param('taskId', taskBelongsToProject)
+
 router.post(
   '/:projectId/tasks',
   hasAuthorization,
@@ -75,8 +78,6 @@ router.get(
   TaskController.getProjectTasks
 )
 
-router.param('taskId', taskExists)
-router.param('taskId', taskBelongsToProject)
 router.get(
   '/:projectId/tasks/:taskId',
   param('taskId').isMongoId().withMessage('ID no válido'),

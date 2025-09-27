@@ -1,10 +1,10 @@
-import type { Request, Response, NextFunction } from "express";
-import Project, { IProject } from "../models/Project";
+import type { NextFunction, Request, Response } from 'express'
+import Project, { IProject } from '../models/Project'
 
 declare global {
   namespace Express {
     interface Request {
-      project: IProject;
+      project?: IProject
     }
   }
 }
@@ -14,16 +14,16 @@ export async function projectExists(
   next: NextFunction
 ) {
   try {
-    const { projectId } = req.params;
-    const project = await Project.findById(projectId);
+    const { projectId } = req.params
+    const project = await Project.findById(projectId)
     if (!project) {
-      const error = new Error("Proyecto no encontrado");
-      res.status(404).json({ error: error });
-      return;
+      const error = new Error('Proyecto no encontrado')
+      res.status(404).json({ error: error })
+      return
     }
-    req.project = project;
-    next();
+    req.project = project
+    next()
   } catch (error) {
-    res.status(500).json({ error: "Hubo un error" });
+    res.status(500).json({ error: 'Hubo un error' })
   }
 }

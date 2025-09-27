@@ -1,10 +1,10 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Document, Schema } from 'mongoose'
 
 export interface IUser extends Document {
-  email: string;
-  password: string;
-  name: string;
-  confirmed: boolean;
+  email: string
+  password: string
+  name: string
+  confirmed: boolean
 }
 
 const userSchema = new Schema({
@@ -26,7 +26,7 @@ const userSchema = new Schema({
     type: Boolean,
     default: false,
   },
-});
+})
 
-const User = mongoose.model<IUser>("User", userSchema);
-export default User;
+const User = mongoose.model<IUser>('User', userSchema)
+export default User

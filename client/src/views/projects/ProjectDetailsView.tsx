@@ -19,13 +19,10 @@ export default function ProjectDetailsView() {
     queryKey: ['project', projectId],
     queryFn: () => getProjectById(projectId),
   })
-
   const canEdit = useMemo(() => data?.manager === user?._id, [data, user])
-  console.log(canEdit)
 
   if (isLoading && authLoading) return 'Cargando...'
   if (isError) return <Navigate to={'/404'} />
-
   if (data && user)
     return (
       <>

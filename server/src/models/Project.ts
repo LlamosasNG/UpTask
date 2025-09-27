@@ -36,14 +36,14 @@ const ProjectSchema: Schema = new Schema(
     ],
     manager: {
       type: Types.ObjectId,
-      ref: 'User'
+      ref: 'User',
     },
     team: [
       {
         type: Types.ObjectId,
-        ref: 'User'
-      }
-    ]
+        ref: 'User',
+      },
+    ],
   },
   { timestamps: true }
 )

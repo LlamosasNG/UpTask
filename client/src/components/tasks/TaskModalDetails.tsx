@@ -1,68 +1,63 @@
-import { Fragment } from "react";
+import { getTaskById, updateStatus } from '@/api/TaskAPI'
+import { statusTranslations } from '@/locales/es'
+import { TaskStatus } from '@/types/index'
+import { formatDate } from '@/utils/utils'
 import {
   Dialog,
-  Transition,
-  TransitionChild,
   DialogPanel,
   DialogTitle,
-} from "@headlessui/react";
-import {
-  Navigate,
-  useLocation,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-toastify";
-import { getTaskById, updateStatus } from "@/api/TaskAPI";
-import { formatDate } from "@/utils/utils";
-import { statusTranslations } from "@/locales/es";
-import { TaskStatus } from "@/types/index";
+  Transition,
+  TransitionChild,
+} from '@headlessui/react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Fragment } from 'react'
+import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 export default function TaskModalDetails() {
-  const params = useParams();
-  const projectId = params.projectId!;
-  const navigate = useNavigate();
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const taskId = queryParams.get("viewTask")!;
-  const show = taskId ? true : false;
+  const params = useParams()
+  const projectId = params.projectId!
+  const navigate = useNavigate()
+  const location = useLocation()
+  const queryParams = new URLSearchParams(location.search)
+  const taskId = queryParams.get('viewTask')!
+  const show = taskId ? true : false
 
   const { data, isError, error } = useQuery({
-    queryKey: ["task", taskId],
+    queryKey: ['task', taskId],
     queryFn: () => getTaskById({ projectId, taskId }),
     enabled: !!taskId,
     retry: false,
-  });
+  })
 
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
   const { mutate } = useMutation({
     mutationFn: updateStatus,
     onError: (error) => {
-      toast.error(error.message);
+      toast.error(error.message)
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["project", projectId] });
-      queryClient.invalidateQueries({ queryKey: ["task", taskId] });
-      toast.success(data);
+      queryClient.invalidateQueries({ queryKey: ['project', projectId] })
+      queryClient.invalidateQueries({ queryKey: ['task', taskId] })
+      toast.success(data)
     },
-  });
+  })
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const status = e.target.value as TaskStatus;
+    const status = e.target.value as TaskStatus
 
     const data = {
       projectId,
       taskId,
       status,
-    };
+    }
 
-    mutate(data);
-  };
+    mutate(data)
+  }
 
   if (isError) {
-    toast.error(error.message, { toastId: "error" });
-    return <Navigate to={`/projects/${projectId}`} />;
+    toast.error(error.message, { toastId: 'error' })
+    return <Navigate to={`/projects/${projectId}`} />
   }
 
   if (data)
@@ -73,7 +68,7 @@ export default function TaskModalDetails() {
             as="div"
             className="relative z-10"
             onClose={() => {
-              navigate(location.pathname, { replace: true });
+              navigate(location.pathname, { replace: true })
             }}
           >
             <TransitionChild
@@ -101,7 +96,7 @@ export default function TaskModalDetails() {
                 >
                   <DialogPanel className="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all p-16">
                     <p className="text-sm text-slate-400">
-                      Agregada el: {formatDate(data.createdAt)}{" "}
+                      Agregada el: {formatDate(data.createdAt)}{' '}
                     </p>
                     <p className="text-sm text-slate-400">
                       Última actualización: {formatDate(data.updatedAt)}
@@ -115,6 +110,19 @@ export default function TaskModalDetails() {
                     <p className="text-lg text-slate-500 mb-2">
                       Descripción: {data.description}
                     </p>
+                    <p className="text-2xl text-slate-500 mb-2">
+                      Historial de Cambios
+                    </p>
+                    <ul className="list-decimal">
+                      {data.completedBy.map((activityLog) => (
+                        <li key={activityLog._id}>
+                          <span className="font-bold text-slate-600">
+                            {statusTranslations[activityLog.status]}
+                          </span>{' '}
+                          por: {activityLog.user.name}
+                        </li>
+                      ))}
+                    </ul>
                     <div className="my-5 space-y-3">
                       <label className="font-bold">Estado Actual:</label>
                       <select
@@ -138,5 +146,5 @@ export default function TaskModalDetails() {
           </Dialog>
         </Transition>
       </>
-    );
+    )
 }

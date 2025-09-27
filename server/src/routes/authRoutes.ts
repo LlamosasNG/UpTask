@@ -4,7 +4,7 @@ import { AuthController } from '../controllers/AuthController'
 import { authenticate } from '../middleware/auth'
 import { handleInputErrors } from '../middleware/validation'
 
-const router = Router()
+const router: Router = Router()
 
 router.post(
   '/create-account',
