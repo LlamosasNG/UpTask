@@ -19,6 +19,7 @@ export const authenticate = async (
   if (!bearer) {
     const error = new Error('No autorizado')
     res.status(401).json({ error: error.message })
+    return
   }
   const token = bearer.split(' ')[1]
   try {
@@ -30,6 +31,7 @@ export const authenticate = async (
         next()
       } else {
         res.status(500).json({ error: 'Token no válido' })
+        return
       }
     }
   } catch (error) {

@@ -1,6 +1,6 @@
 import cors from 'cors'
 import dotenv from 'dotenv'
-import express from 'express'
+import express, { Express } from 'express'
 import morgan from 'morgan'
 import authRoutes from '../src/routes/authRoutes'
 import projectRoutes from '../src/routes/projectRoutes'
@@ -11,7 +11,7 @@ dotenv.config()
 connectDB()
 
 /* Crear servidor */
-const app = express()
+const app: Express = express()
 app.use(cors(corsConfig))
 
 /* Loggin */
