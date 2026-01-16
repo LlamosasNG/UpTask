@@ -18,7 +18,7 @@ export async function projectExists(
     const project = await Project.findById(projectId)
     if (!project) {
       const error = new Error('Proyecto no encontrado')
-      res.status(404).json({ error: error })
+      res.status(404).json({ error: error.message })
       return
     }
     req.project = project

@@ -3,6 +3,7 @@ import AuthLayout from '@/layouts/AuthLayout'
 import DashboardView from '@/views/DashboardView'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import ProfileLayout from './layouts/ProfileLayout'
+import NotFoundView from './views/404/NotFoundView'
 import ConfirmAccountView from './views/auth/ConfirmAccountView'
 import ForgotPasswordView from './views/auth/ForgotPasswordView'
 import LoginView from './views/auth/LoginView'
@@ -53,6 +54,9 @@ export default function Router() {
             element={<ForgotPasswordView />}
           />
           <Route path="/auth/new-password" element={<NewPasswordView />} />
+        </Route>
+        <Route element={<AuthLayout />}>
+          <Route path="/404" element={<NotFoundView />} />
         </Route>
       </Routes>
     </BrowserRouter>
