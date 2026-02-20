@@ -6,7 +6,6 @@ import NewPasswordForm from '../../components/auth/NewPasswordForm'
 export default function NewPasswordView() {
   const [token, setToken] = useState<ConfirmToken['token']>('')
   const [isValidToken, setIsValidToken] = useState(false)
-
   return (
     <>
       <h1 className="text-5xl font-black text-white">
