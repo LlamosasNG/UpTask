@@ -3,4 +3,4 @@ import { Project, TeamMember } from '../types'
 export const isManager = (
   manager: Project['manager'],
   userId: TeamMember['_id']
-) => manager._id === userId
+) => manager === userId
