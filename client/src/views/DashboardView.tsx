@@ -1,4 +1,5 @@
 import { getProjects } from '@/api/ProjectAPI'
+import LoadingApp from '@/components/LoadingApp'
 import DeleteProjectModal from '@/components/projects/DeleteProjectModal'
 import { useAuth } from '@/hooks/useAuth'
 import { isManager } from '@/utils/policies'
@@ -17,7 +18,7 @@ export default function DashboardView() {
     queryFn: getProjects,
   })
 
-  if (isLoading && authLoading) return 'Cargando...'
+  if (isLoading && authLoading) return <LoadingApp />
   if (data && user)
     return (
       <>

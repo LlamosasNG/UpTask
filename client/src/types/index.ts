@@ -98,9 +98,9 @@ export const projectSchema = z.object({
   projectName: z.string(),
   clientName: z.string(),
   description: z.string(),
-  manager: z.string(userSchema.pick({ _id: true })),
+  manager: userSchema.pick({ _id: true }),
   tasks: z.array(taskProjectSchema),
-  team: z.array(z.string(userSchema.pick({ _id: true }))),
+  team: z.array(userSchema.pick({ _id: true })),
 })
 
 export type Project = z.infer<typeof projectSchema>

@@ -5,8 +5,8 @@ export class TaskController {
   static createTask = async (req: Request, res: Response) => {
     try {
       const task = new Task(req.body)
-      task.project = req.project.id
-      req.project.tasks.push(task.id)
+      task.project = req.project._id
+      req.project.tasks.push(task._id)
       await Promise.allSettled([task.save(), req.project.save()])
       res.send('Tarea creada correctamente')
     } catch (error) {
@@ -16,7 +16,7 @@ export class TaskController {
 
   static getProjectTasks = async (req: Request, res: Response) => {
     try {
-      const tasks = await Task.find({ project: req.project.id }).populate(
+      const tasks = await Task.find({ project: req.project._id }).populate(
         'project'
       )
       res.json(tasks)
@@ -27,7 +27,7 @@ export class TaskController {
 
   static getTaksById = async (req: Request, res: Response) => {
     try {
-      const task = await Task.findById(req.task.id)
+      const task = await Task.findById(req.task._id)
         .populate({
           path: 'completedBy.user',
           select: 'id name email',
@@ -56,7 +56,7 @@ export class TaskController {
   static deleteTask = async (req: Request, res: Response) => {
     try {
       req.project.tasks = req.project.tasks.filter(
-        (task) => task.toString() !== req.task.id.toString()
+        (task) => task.toString() !== req.task._id.toString()
       )
       await Promise.allSettled([req.task.deleteOne(), req.project.save()])
       res.send('Tarea eliminada correctamente')
@@ -70,7 +70,7 @@ export class TaskController {
       const { status } = req.body
       req.task.status = status
       const data = {
-        user: req.user.id,
+        user: req.user._id,
         status,
       }
       req.task.completedBy.push(data)

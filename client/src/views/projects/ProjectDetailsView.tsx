@@ -1,4 +1,5 @@
 import { getFullProject } from '@/api/ProjectAPI'
+import LoadingApp from '@/components/LoadingApp'
 import AddTaskModal from '@/components/tasks/AddTaskModal'
 import EditTaskData from '@/components/tasks/EditTaskData'
 import TaskList from '@/components/tasks/TaskList'
@@ -22,7 +23,7 @@ export default function ProjectDetailsView() {
   })
   const canEdit = useMemo(() => data?.manager === user?._id, [data, user])
 
-  if (isLoading && authLoading) return 'Cargando...'
+  if (isLoading && authLoading) return <LoadingApp />
   if (isError) return <Navigate to={'/404'} />
   if (data && user)
     return (

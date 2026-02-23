@@ -28,7 +28,7 @@ export class AuthController {
       /* Generar token */
       const token = new Token()
       token.token = generateToken()
-      token.user = user.id
+      token.user = user._id
 
       /* Envíar email */
       AuthEmail.sendConfirmationEmail({
@@ -76,7 +76,7 @@ export class AuthController {
       }
       if (!user.confirmed) {
         const token = new Token()
-        token.user = user.id
+        token.user = user._id
         token.token = generateToken()
         await token.save()
 
@@ -101,7 +101,7 @@ export class AuthController {
         return
       }
 
-      const token = generateJWT({ _id: user.id })
+      const token = generateJWT({ _id: user._id })
       res.status(201).send(token)
     } catch (error) {
       res
@@ -132,7 +132,7 @@ export class AuthController {
       /* Generar token */
       const token = new Token()
       token.token = generateToken()
-      token.user = user.id
+      token.user = user._id
 
       /* Envíar email */
       AuthEmail.sendConfirmationEmail({
@@ -163,7 +163,7 @@ export class AuthController {
       /* Generar token */
       const token = new Token()
       token.token = generateToken()
-      token.user = user.id
+      token.user = user._id
       await token.save()
 
       /* Envíar email */
@@ -226,7 +226,7 @@ export class AuthController {
   static updatedProfile = async (req: Request, res: Response) => {
     const { name, email } = req.body
     const userExists = await User.findOne({ email })
-    if (userExists && userExists._id.toString() !== req.user.id.toString()) {
+    if (userExists && userExists._id.toString() !== req.user._id.toString()) {
       const error = new Error('Email registrado por otro usuario')
       return res.status(409).json({ error: error.message })
     }
@@ -243,7 +243,7 @@ export class AuthController {
 
   static updateCurrentUserPassword = async (req: Request, res: Response) => {
     const { current_password, password } = req.body
-    const user = await User.findById(req.user.id)
+    const user = await User.findById(req.user._id)
     const isPasswordCorrect = await checkPassword(
       current_password,
       user.password
@@ -263,7 +263,7 @@ export class AuthController {
 
   static checkPassword = async (req: Request, res: Response) => {
     const { password } = req.body
-    const user = await User.findById(req.user.id)
+    const user = await User.findById(req.user._id)
     const isPasswordCorrect = await checkPassword(password, user.password)
     if (!isPasswordCorrect) {
       const error = new Error('El password es incorrecto')

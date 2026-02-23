@@ -36,7 +36,7 @@ export class TeamController {
         res.status(409).json({ error: error.message })
         return
       }
-      req.project.team.push(user.id)
+      req.project.team.push(user._id)
       await req.project.save()
       res.send('Usuario agregado correctamente')
     } catch (error) {
@@ -64,7 +64,7 @@ export class TeamController {
 
   static getProjectTeam = async (req: Request, res: Response) => {
     try {
-      const project = await Project.findById(req.project.id).populate({
+      const project = await Project.findById(req.project._id).populate({
         path: 'team',
         select: 'id email name',
       })

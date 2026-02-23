@@ -6,9 +6,9 @@ export class NoteController {
     const { content } = req.body
     const note = new Note()
     note.content = content
-    note.createdBy = req.user.id
-    note.task = req.task.id
-    req.task.notes.push(note.id)
+    note.createdBy = req.user._id
+    note.task = req.task._id
+    req.task.notes.push(note._id)
 
     try {
       await Promise.allSettled([note.save(), req.task.save()])
@@ -20,7 +20,7 @@ export class NoteController {
 
   static getTaskNotes = async (req: Request, res: Response) => {
     try {
-      const notes = await Note.find({ task: req.task.id })
+      const notes = await Note.find({ task: req.task._id })
       res.json(notes)
     } catch (error) {
       res.status(500).json({ message: 'Hubo un error' })
@@ -35,7 +35,7 @@ export class NoteController {
       const error = new Error('Nota no encontrada')
       return res.status(404).json({ error: error.message })
     }
-    if (note.createdBy.toString() !== req.user.id.toString()) {
+    if (note.createdBy.toString() !== req.user._id.toString()) {
       const error = new Error('Acción no válida')
       return res.status(403).json({ error: error.message })
     }

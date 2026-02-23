@@ -1,8 +1,9 @@
+import LoadingApp from '@/components/LoadingApp'
 import ProfileForm from '@/components/profile/ProfileForm'
 import { useAuth } from '@/hooks/useAuth'
 
 export default function ProfileView() {
   const { data, isLoading } = useAuth()
-  if (isLoading) 'Cargando...'
+  if (isLoading) <LoadingApp />
   if (data) return <ProfileForm data={data} />
 }
